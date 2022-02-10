@@ -49,8 +49,7 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
       body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection("task_list").snapshots(),
+          stream: readItems(),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               final _tasks = snapshot.data!.docs;
@@ -82,12 +81,11 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Future<DocumentSnapshot> getData() async {
-    await Firebase.initializeApp();
-    return await FirebaseFirestore.instance
-        .collection("todo_db")
-        .doc("task")
-        .get();
+  static Stream<QuerySnapshot> readItems() {
+    CollectionReference notesItemCollection =
+        FirebaseFirestore.instance.collection('task_list');
+
+    return notesItemCollection.snapshots();
   }
 
   Future<void> addItem({
